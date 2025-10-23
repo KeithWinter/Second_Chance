@@ -346,7 +346,7 @@ class UsernamePrompt(State):
                     self.active = False
             if event.type == pg.KEYDOWN:
                 if self.active:
-                    if event.key == pg.K_RETURN:
+                    if event.key in ENTER_KEYS:
                         if len(self.username) > 0:  # Make sure user has entered at least 1 character
                             self.game.username = self.username[:15]  # Limiting username to 15 characters
                             self.manager.set_state(StartMenu)

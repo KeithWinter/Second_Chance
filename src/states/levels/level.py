@@ -56,7 +56,7 @@ class Level(State):
     def update(self, events):
         self.current_time = self.timer.get_time(ms=True)
 
-        self.scroll = self.player.update()
+        self.scroll = self.player.update(events)
         self.enemies.update(self.player)
         self.objects.update(self.scroll)
         self.tiles.update(self.scroll)

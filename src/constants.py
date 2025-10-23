@@ -1,6 +1,7 @@
 """Useful game constants."""
 
 import os
+import pygame
 
 FRAME_RATE = 60
 
@@ -12,3 +13,5 @@ COLS = 150
 TILE_SIZE = SCREEN_HEIGHT // ROWS
 TILE_TYPES = 21
 SCROLL_THRESH = 200
+
+ENTER_KEYS = (pygame.K_RETURN, pygame.K_KP_ENTER)

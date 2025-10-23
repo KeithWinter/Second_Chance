@@ -4,6 +4,7 @@ import src.states.menu.menus as menus
 from .menus import StartMenu
 from .menus import UsernamePrompt
 from ..state import State
+from src.constants import ENTER_KEYS
 
 
 class TitleScreen(State):
@@ -25,7 +26,7 @@ class TitleScreen(State):
         for event in events:
             if event.type != pg.KEYDOWN:
                 return
-            if event.key == pg.K_RETURN:
+            if event.key in ENTER_KEYS:
                 if self.game.username == "":
                     self.manager.set_state(UsernamePrompt)
                 else:

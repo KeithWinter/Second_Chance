@@ -54,6 +54,7 @@ class Player(pg.sprite.Sprite):
         self.is_moving = False
         self.on_ground = False
         self.is_jumping = False
+        self.jump_count = 0
         self.direction = "right"
         self.last_ground_pos = pg.Rect(0, 0, 0, 0)
 
@@ -123,7 +124,7 @@ class Player(pg.sprite.Sprite):
         # Define hitbox
         self.hitbox = pg.Rect(x, y, self.rect.width, self.rect.height)
 
-    def update(self):
+    def update(self, events):
         """Updates the position of the player's rect.
 
         Returns:
@@ -138,7 +139,7 @@ class Player(pg.sprite.Sprite):
         self.dy += self.vel_y
 
         # Set variables depending on input
-        self.input()
+        self.input(events)
 
         # Move depending on variables set
         self.move()
@@ -158,10 +159,6 @@ class Player(pg.sprite.Sprite):
         # Kill player if they have fallen into a gap
         if self.rect.top - 50 >= self.screen.get_height():
             self.health = 0
-
-        # Jumping
-        if self.on_ground and self.is_jumping:
-            self.jump()
 
         # Update rect
         self.rect.x += self.dx
@@ -239,21 +236,23 @@ class Player(pg.sprite.Sprite):
 
         return -self.scroll
 
-    def input(self):
+    def input(self, events):
         """Sets player class variables according to inputs from the user."""
-
         keys = pg.key.get_pressed()
         mouse_buttons = pg.mouse.get_pressed()
 
         self.melee_pressed = keys[pg.K_q] or mouse_buttons[0]  # Q and left click for melee attack
         self.ranged_pressed = keys[pg.K_e] or mouse_buttons[2]  # E and right click for ranged attack
 
-        self.up_press = keys[pg.K_SPACE] or keys[pg.K_UP] or keys[pg.K_w]
         self.left_press = keys[pg.K_LEFT] or keys[pg.K_a]
         self.right_press = keys[pg.K_RIGHT] or keys[pg.K_d]
         self.movement_pressed = self.left_press or self.right_press
 
-        self.is_jumping = self.up_press
+        for event in events:
+            if event.type == pg.KEYDOWN:
+                 if event.key in (pg.K_SPACE, pg.K_UP, pg.K_w) and self.jump_count < 2:
+                    print("JUMP BUTTON")
+                    self.jump()
 
         if self.movement_pressed:
             self.is_moving = True
@@ -288,6 +287,8 @@ class Player(pg.sprite.Sprite):
     def jump(self):
         """Performs a jump."""
 
+        self.jump_count = self.jump_count + 1
+        print(self.jump_count)
         self.vel_y = self.jump_strength
         self.dy += self.vel_y
         self.on_ground = False
@@ -309,6 +310,7 @@ class Player(pg.sprite.Sprite):
                     self.dy = 0
                     self.vel_y = 0  # stop falling
                     self.on_ground = True
+                    self.jump_count = 0
 
         x_check = pg.Rect(self.rect.x + self.dx, self.rect.y, self.rect.width, self.rect.height)
         y_check = pg.Rect(self.rect.x, self.rect.y + math.ceil(self.dy),
@@ -336,6 +338,7 @@ class Player(pg.sprite.Sprite):
                     self.vel_y = 0
                     self.on_ground = True
                     self.is_moving = False
+                    self.jump_count = 0
                     # The last position when the player was on the ground
                     if tile.rect != self.last_ground_pos:
                         self.last_ground_pos = tile.rect

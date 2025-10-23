@@ -1,4 +1,5 @@
 import pygame as pg
+from src.constants import ENTER_KEYS
 
 from ..state import State
 
@@ -14,7 +15,7 @@ class WinScreen(State):
         for event in events:
             if event.type != pg.KEYDOWN:
                 return
-            if event.key == pg.K_RETURN:
+            if event.key in ENTER_KEYS:
                 self.manager.set_state(TitleScreen)
 
     def draw(self):

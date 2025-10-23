@@ -4,6 +4,7 @@ import random
 import pygame as pg
 
 from src.states.minigames.minigame import Minigame
+from src.constants import ENTER_KEYS
 
 
 class Memory(Minigame):
@@ -43,7 +44,7 @@ class Memory(Minigame):
         super().handle_events(events)  # To enable pause menu access
         for event in events:
             if event.type == pg.KEYDOWN and self.input_active:
-                if event.key == pg.K_RETURN:
+                if event.key in ENTER_KEYS:
                     self.check_win_condition()
                 elif event.key == pg.K_BACKSPACE:
                     self.input_string = self.input_string[:-1]
