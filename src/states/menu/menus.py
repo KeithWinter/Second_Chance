@@ -4,6 +4,8 @@ import math
 import pygame as pg
 import pygame_menu
 
+import reddit_getter as rg
+
 # Not using relative import to handle circular import issue when importing TitleScreen
 # TODO Fix this later
 import src.states.menu.title_screen as ts
@@ -95,6 +97,7 @@ class StartMenu(State):
         self.menu.add.button("Minigames", self.minigames_menu)
         self.menu.add.button("Leaderboard", self.leaderboard_menu)
         self.menu.add.button("Options", self.options_menu)
+        self.menu.add.button("View recent r/Temple posts", self.temple_news)
         self.menu.add.button('Change Username', self.manager.set_state, UsernamePrompt)
         self.menu.add.button('Quit', pygame_menu.events.EXIT)
 
@@ -176,6 +179,22 @@ class StartMenu(State):
         self.menu.add.button('Decrease Volume', self.decrease_volume)
 
         self.menu.add.button('Toggle dark mode on/off', self.toggle)
+
+        # Add back button
+        self.menu.add.button('Back', self.main_menu)
+    
+    def temple_news(self):
+        """Opens the temple news menu"""
+
+        if (self.current_theme == "Light"):
+            self.menu = pygame_menu.Menu('Options', SCREEN_WIDTH, SCREEN_HEIGHT, theme=pygame_menu.themes.THEME_BLUE)
+
+        else:
+            self.menu = pygame_menu.Menu('Options', SCREEN_WIDTH, SCREEN_HEIGHT, theme=pygame_menu.themes.THEME_DARK)
+
+        # Add r/Temple posts
+        reddit_string = rg.get_top_temple_posts()
+        self.menu.add.label(reddit_string, max_char = -1, font_size = 20)
 
         # Add back button
         self.menu.add.button('Back', self.main_menu)
